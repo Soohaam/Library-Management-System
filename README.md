@@ -74,8 +74,8 @@ This system enables librarians to efficiently manage books, members, and transac
 ### **Step 1: Clone the Repository**
 Clone the project repository from GitHub using the following command:
   
-    git clone https://github.com/yourusername/library-management-system.git
-    cd library-management-system
+    git clone https://github.com/yourusername/Library-Management-System.git
+    cd Library-Management-System
 
 ### **Step 2: Create Virtual Environment**
 
@@ -160,14 +160,28 @@ Open your web browser and visit:
 **Section for issuing and returning books with automatic updates to stock and member debt.** 
 ![Transaction Management](public/transaction.png)
 
+### 📚 Import Books from Frappe Library
+**Enables the librarian to import books directly from the Frappe Library API with custom filters and quantity selection.**
+![Frappe Library](public/api.png)
+
+
+## 📸 Database Screenshots
+
+### Books Table
+![Books Table](public/db1.png)
+
+### Members Table
+![Members Table](public/db2.png)
+
+### Transactions Table
+![Transactions Table](public/db3.png)
+
 
 ## 🎥 Project Demonstration
-Watch the complete walkthrough of the **Library Management System** in action — showcasing key features such as book management, member registration, transactions, and API-based book imports.
+Watch the complete walkthrough of the **Library Management System** in action showcasing key features such as book management, member registration, transactions, and API-based book imports.
 
 ### 📽️ **Project Video:**  
 
-(https://img.shields.io/badge/▶️%20Click%20to%20Watch-blue?style=for-the-badge)](https://your-video-link-here)
-
-
+https://github.com/user-attachments/assets/ea1bb286-bad6-4169-8924-8a1c0154e16e
 
    
