@@ -20,7 +20,7 @@ def init_db():
     cursor.execute('''CREATE TABLE IF NOT EXISTS books (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         title TEXT NOT NULL,
-                        author TEXT,                 -- fixed column name
+                        authors TEXT,
                         publisher TEXT,
                         isbn TEXT UNIQUE,
                         isbn13 TEXT,
@@ -60,14 +60,14 @@ def init_db():
 
 # ---------------------- BOOK OPERATIONS ----------------------
 
-def add_book(title, author, publisher, isbn, isbn13, num_pages, stock):
+def add_book(title, authors, publisher, isbn, isbn13, num_pages, stock):
     """Add a new book to the database"""
     conn = get_db()
     cursor = conn.cursor()
     try:
-        cursor.execute('''INSERT INTO books (title, author, publisher, isbn, isbn13, num_pages, stock, available)
+        cursor.execute('''INSERT INTO books (title, authors, publisher, isbn, isbn13, num_pages, stock, available)
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-                       (title, author, publisher, isbn, isbn13, num_pages, stock, stock))
+                       (title, authors, publisher, isbn, isbn13, num_pages, stock, stock))
         conn.commit()
         return cursor.lastrowid
     except sqlite3.IntegrityError:
@@ -98,11 +98,11 @@ def get_book(book_id):
     return book
 
 
-def update_book(book_id, title, author, publisher, isbn, stock):
+def update_book(book_id, title, authors, publisher, isbn, stock):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute('''UPDATE books SET title = ?, author = ?, publisher = ?, isbn = ?, stock = ?
-                      WHERE id = ?''', (title, author, publisher, isbn, stock, book_id))
+    cursor.execute('''UPDATE books SET title = ?, authors = ?, publisher = ?, isbn = ?, stock = ?
+                      WHERE id = ?''', (title, authors, publisher, isbn, stock, book_id))
     conn.commit()
     conn.close()
 
@@ -120,7 +120,7 @@ def search_books(query):
     cursor = conn.cursor()
     search_query = f'%{query}%'
     cursor.execute('''SELECT * FROM books 
-                      WHERE title LIKE ? OR author LIKE ?
+                      WHERE title LIKE ? OR authors LIKE ?
                       ORDER BY title''', (search_query, search_query))
     books = cursor.fetchall()
     conn.close()
@@ -262,7 +262,7 @@ def get_all_transactions():
 def get_issued_books():
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute('''SELECT t.*, b.title as book_title, b.author, m.name as member_name, m.email
+    cursor.execute('''SELECT t.*, b.title as book_title, b.authors, m.name as member_name, m.email
                       FROM transactions t
                       JOIN books b ON t.book_id = b.id
                       JOIN members m ON t.member_id = m.id

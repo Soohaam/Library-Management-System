@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Members - Library Management System{% endblock %}
+
+{% block content %}
+<div class="members-page">
+    <div class="page-header">
+        <h2>Members Management</h2>
+        <button class="btn btn-primary" onclick="showModal('addMemberModal')">+ Add New Member</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Outstanding Debt (Rs.)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>{{ member.id }}</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>{{ member.phone or 'N/A' }}</td>
+                    <td class="{% if member.debt >= 500 %}text-danger{% endif %}">
+                        Rs. {{ "%.2f"|format(member.debt) }}
+                    </td>
+                    <td>
+                        <button class="btn-small btn-edit" onclick='editMember({{ member.id }}, "{{ member.name }}", "{{ member.email }}", "{{ member.phone or "" }}")'>Edit</button>
+                        <form action="{{ url_for('delete_member_route', member_id=member.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?')">
+                            <button type="submit" class="btn-small btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No members found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Member Modal -->
+<div id="addMemberModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('addMemberModal')">&times;</span>
+        <h3>Add New Member</h3>
+        <form action="{{ url_for('add_member_route') }}" method="POST">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" name="phone">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Member</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Member Modal -->
+<div id="editMemberModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('editMemberModal')">&times;</span>
+        <h3>Edit Member</h3>
+        <form id="editMemberForm" method="POST">
+            <input type="hidden" id="edit_member_id">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" name="name" id="edit_name" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" id="edit_email" required>
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" name="phone" id="edit_phone">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Member</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function editMember(id, name, email, phone) {
+    document.getElementById('edit_member_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_email').value = email;
+    document.getElementById('edit_phone').value = phone;
+    document.getElementById('editMemberForm').action = '/members/update/' + id;
+    showModal('editMemberModal');
+}
+</script>
+{% endblock %}

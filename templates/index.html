@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Library Management System{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>Dashboard</h2>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-info">
+                <h3>Total Books</h3>
+                <p class="stat-number">{{ stats.total_books }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+                <h3>Total Members</h3>
+                <p class="stat-number">{{ stats.total_members }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📖</div>
+            <div class="stat-info">
+                <h3>Currently Issued</h3>
+                <p class="stat-number">{{ stats.issued_books }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-info">
+                <h3>Total Transactions</h3>
+                <p class="stat-number">{{ stats.total_transactions }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+            <a href="{{ url_for('books') }}" class="btn btn-primary">Manage Books</a>
+            <a href="{{ url_for('members') }}" class="btn btn-primary">Manage Members</a>
+            <a href="{{ url_for('transactions') }}" class="btn btn-primary">Issue/Return Books</a>
+            <a href="{{ url_for('import_books_page') }}" class="btn btn-success">Import Books from API</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

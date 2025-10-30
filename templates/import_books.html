@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Import Books - Library Management System{% endblock %}
+
+{% block content %}
+<div class="import-page">
+    <div class="page-header">
+        <h2>📚 Import Books from Frappe API</h2>
+        <a href="{{ url_for('books') }}" class="btn btn-secondary">← Back to Books</a>
+    </div>
+
+    <div class="import-container">
+        <div class="info-card">
+            <h3>ℹ️ How it works</h3>
+            <ul>
+                <li>Import books from the Frappe Library API</li>
+                <li>The API returns up to 20 books per page</li>
+                <li>You can filter by title, authors, ISBN, or publisher</li>
+                <li>Specify the number of books you want to import</li>
+                <li>Duplicate books (by ISBN) will have their stock updated automatically</li>
+                <li>Books without ISBN will always be added as new entries</li>
+            </ul>
+        </div>
+
+        <div class="form-card">
+            <h3>Import Configuration</h3>
+            <form action="{{ url_for('import_books_route') }}" method="POST" id="importForm">
+                <div class="form-group">
+                    <label>Number of Books to Import *</label>
+                    <input type="number" name="num_books" id="num_books" min="1" max="200" value="20" required>
+                    <small>Maximum recommended: 200 books</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Filter by Title (optional)</label>
+                    <input type="text" name="title" placeholder="e.g., Harry Potter, The Lord">
+                    <small>Leave empty to import any books</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Filter by Authors (optional)</label>
+                    <input type="text" name="authors" placeholder="e.g., J.K. Rowling, Stephen King">
+                </div>
+
+                <div class="form-group">
+                    <label>Filter by ISBN (optional)</label>
+                    <input type="text" name="isbn" placeholder="e.g., 9780439136365">
+                </div>
+
+                <div class="form-group">
+                    <label>Filter by Publisher (optional)</label>
+                    <input type="text" name="publisher" placeholder="e.g., Scholastic, Penguin">
+                </div>
+
+                <button type="submit" class="btn btn-success btn-large" id="importBtn">
+                    🚀 Start Import
+                </button>
+                <div id="loadingMessage" style="display: none; margin-top: 15px; color: #2196F3;">
+                    ⏳ Importing books... This may take a moment. Please wait.
+                </div>
+            </form>
+        </div>
+
+        <div class="example-card">
+            <h3>💡 Usage Examples</h3>
+            <div class="example-item">
+                <strong>Example 1: Import 30 Harry Potter books</strong>
+                <p>• Number of Books: <code>30</code><br>
+                   • Title: <code>Harry Potter</code><br>
+                   • Leave other fields empty</p>
+            </div>
+            <div class="example-item">
+                <strong>Example 2: Import 50 books by Stephen King</strong>
+                <p>• Number of Books: <code>50</code><br>
+                   • Authors: <code>Stephen King</code><br>
+                   • Leave other fields empty</p>
+            </div>
+            <div class="example-item">
+                <strong>Example 3: Import 40 Penguin published books</strong>
+                <p>• Number of Books: <code>40</code><br>
+                   • Publisher: <code>Penguin</code><br>
+                   • Leave other fields empty</p>
+            </div>
+            <div class="example-item">
+                <strong>Example 4: Import any 100 books</strong>
+                <p>• Number of Books: <code>100</code><br>
+                   • Leave all filter fields empty</p>
+            </div>
+        </div>
+
+        <div class="api-info-card">
+            <h3>🔗 API Information</h3>
+            <p><strong>Endpoint:</strong> <code>https://frappe.io/api/method/frappe-library</code></p>
+            <p><strong>Parameters:</strong> page, title, authors, isbn, publisher</p>
+            <p><strong>Returns:</strong> 20 books per page in JSON format</p>
+            <p><strong>Note:</strong> The system will automatically fetch multiple pages if you request more than 20 books.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.import-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.page-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.import-container {
+    display: grid;
+    gap: 20px;
+}
+
+.info-card, .form-card, .example-card, .api-info-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-card h3, .form-card h3, .example-card h3, .api-info-card h3 {
+    margin-top: 0;
+    color: #2196F3;
+}
+
+.info-card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.info-card li {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 12px;
+}
+
+.btn-large {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.example-item {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #2196F3;
+    border-radius: 4px;
+}
+
+.example-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.example-item p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+.example-item code {
+    background: #e3f2fd;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    color: #1976D2;
+}
+
+.api-info-card p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.api-info-card code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    color: #d32f2f;
+}
+
+#loadingMessage {
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+</style>
+
+<script>
+document.getElementById('importForm').addEventListener('submit', function() {
+    document.getElementById('importBtn').disabled = true;
+    document.getElementById('loadingMessage').style.display = 'block';
+});
+</script>
+{% endblock %}

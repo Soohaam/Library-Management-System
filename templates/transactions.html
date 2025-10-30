@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions - Library Management System{% endblock %}
+
+{% block content %}
+<div class="transactions-page">
+    <div class="page-header">
+        <h2>Transactions Management</h2>
+        <button class="btn btn-primary" onclick="showModal('issueBookModal')">📚 Issue Book</button>
+    </div>
+
+    <h3>Currently Issued Books</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Trans. ID</th>
+                    <th>Book</th>
+                    <th>Authors</th>
+                    <th>Member</th>
+                    <th>Issue Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trans in issued_books %}
+                <tr>
+                    <td>{{ trans.id }}</td>
+                    <td>{{ trans.book_title }}</td>
+                    <td>{{ trans.authors }}</td>
+                    <td>{{ trans.member_name }}</td>
+                    <td>{{ trans.issue_date }}</td>
+                    <td>
+                        <button class="btn-small btn-success" onclick="showReturnModal({{ trans.id }}, '{{ trans.book_title }}', '{{ trans.member_name }}')">Return Book</button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No books currently issued</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3>All Transactions</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Trans. ID</th>
+                    <th>Book</th>
+                    <th>Member</th>
+                    <th>Issue Date</th>
+                    <th>Return Date</th>
+                    <th>Fee (Rs.)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trans in transactions %}
+                <tr>
+                    <td>{{ trans.id }}</td>
+                    <td>{{ trans.book_title }}</td>
+                    <td>{{ trans.member_name }}</td>
+                    <td>{{ trans.issue_date }}</td>
+                    <td>{{ trans.return_date or 'Not Returned' }}</td>
+                    <td>Rs. {{ "%.2f"|format(trans.fee) }}</td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if trans.status == 'returned' else 'warning' }}">
+                            {{ trans.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center;">No transactions found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Issue Book Modal -->
+<div id="issueBookModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('issueBookModal')">&times;</span>
+        <h3>Issue Book</h3>
+        <form action="{{ url_for('issue_book_route') }}" method="POST">
+            <div class="form-group">
+                <label>Select Book *</label>
+                <select name="book_id" required>
+                    <option value="">-- Select a Book --</option>
+                    {% for book in books %}
+                        {% if book.available > 0 %}
+                        <option value="{{ book.id }}">{{ book.title }} (Available: {{ book.available }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Member *</label>
+                <select name="member_id" required>
+                    <option value="">-- Select a Member --</option>
+                    {% for member in members %}
+                        <option value="{{ member.id }}" {% if member.debt >= 500 %}disabled{% endif %}>
+                            {{ member.name }} - {{ member.email }} 
+                            {% if member.debt >= 500 %}(Debt: Rs.{{ "%.2f"|format(member.debt) }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Issue Book</button>
+        </form>
+    </div>
+</div>
+
+<!-- Return Book Modal -->
+<div id="returnBookModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('returnBookModal')">&times;</span>
+        <h3>Return Book</h3>
+        <form id="returnBookForm" method="POST">
+            <input type="hidden" id="return_trans_id">
+            <div class="info-box">
+                <p><strong>Book:</strong> <span id="return_book_name"></span></p>
+                <p><strong>Member:</strong> <span id="return_member_name"></span></p>
+            </div>
+            <div class="form-group">
+                <label>Rental Fee (Rs.) *</label>
+                <input type="number" name="fee" step="0.01" min="0" value="0" required>
+                <small>Note: This fee will be added to member's outstanding debt</small>
+            </div>
+            <button type="submit" class="btn btn-success">Complete Return</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function showReturnModal(transId, bookName, memberName) {
+    document.getElementById('return_trans_id').value = transId;
+    document.getElementById('return_book_name').textContent = bookName;
+    document.getElementById('return_member_name').textContent = memberName;
+    document.getElementById('returnBookForm').action = '/transactions/return/' + transId;
+    showModal('returnBookModal');
+}
+</script>
+{% endblock %}
