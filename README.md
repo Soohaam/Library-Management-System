@@ -13,32 +13,52 @@ This system enables librarians to efficiently manage books, members, and transac
 - To ensure clean, reusable, and well-structured code using **Python** for backend.
 
 
+## 🛠️ Technology Stack
+
+### 🧩 Backend
+- **Python 3.7+** - Core programming language  
+- **Flask 2.3.3** - Web framework  
+- **SQLite3** - Database management  
+- **Requests** - HTTP library for API integration  
+
+### 🎨 Frontend
+- **HTML5** - Structure and semantics  
+- **CSS3** - Styling with gradients and animations  
+- **JavaScript (Vanilla)** - Client-side interactions  
+- **Responsive Design** - Mobile-first approach  
+
+### 🧰 Development Tools
+- **Git** - Version control  
+- **Virtual Environment** - Dependency isolation  
+- **Flask Debug Mode** - Development server  
+
+
+
 ## 📁 Project Structure
 
 
-    Library-Management-System/
-    │
-    ├── 📁 static/
-    │ ├── 📁 css/
-    │ │ └── style.css # Complete application styling
-    │ └── 📁 js/
-    │ └── main.js # JavaScript for modals and interactions
-    │
-    ├── 📁 templates/
-    │ ├── base.html # Base template with navigation
-    │ ├── index.html # Dashboard with statistics
-    │ ├── books.html # Books management interface
-    │ ├── members.html # Members management interface
-    │ ├── transactions.html # Issue/return books interface
-    │ ├── import_books.html # Frappe API import interface
-    │ └── reports.html # Reports and analytics
-    │
-    ├── app.py # Main Flask application
-    ├── database.py # Database operations and queries
-    ├── library.db # SQLite database (auto-generated)
-    ├── requirements.txt # Python dependencies
-    ├── .gitignore # Git ignore rules
-    └── README.md # This file
+        Library-Management-System/
+        │
+        ├── 📁 static/
+        │   ├── 📁 css/
+        │   │   └── style.css               # Complete application styling
+        │   └── 📁 js/
+        │       └── main.js                 # JavaScript for modals and interactions
+        │
+        ├── 📁 templates/
+        │   ├── base.html                   # Base template with navigation
+        │   ├── index.html                  # Dashboard with statistics
+        │   ├── books.html                  # Books management interface
+        │   ├── members.html                # Members management interface
+        │   ├── transactions.html           # Issue/return books interface
+        │   └── import_books.html           # Frappe API import interface
+        │
+        ├── app.py                          # Main Flask application
+        ├── database.py                     # Database operations and queries
+        ├── library.db                      # SQLite database
+        ├── requirements.txt                # Python dependencies
+        ├── .gitignore                      
+        └── README.md                       
 
 
 ## 🚀 Installation & Setup
@@ -106,7 +126,6 @@ Open your web browser and visit:
 #### 👥 Members Management
 - **Member Records:** Maintain detailed member information (name, email, phone)  
 - **Debt Tracking:** Real-time tracking of outstanding rental fees  
-- **Email Validation:** Ensures unique email addresses for each member  
 - **Easy Updates:** Quick edit and delete functionality with confirmation  
 
 #### 🔄 Transaction Management
@@ -119,27 +138,36 @@ Open your web browser and visit:
 #### 🌐 Frappe API Integration
 - **Bulk Import:** Import books directly from Frappe Library API  
 - **Flexible Filtering:** Filter by title, authors, ISBN, or publisher  
-- **Custom Quantities:** Specify exact number of books to import (1–200)  
+- **Custom Quantities:** Specify exact number of books to import
 - **Smart Pagination:** Automatically fetches multiple pages to reach desired quantity  
 - **Professional UI:** Beautiful loading animations and progress indicators  
 
 ## 📸 Screenshots
 
 ### 🏠 Dashboard  
-An overview of key library metrics including total books, members, and issued records.  
+**An overview of key library metrics including total books, members, and issued records.**
 ![Dashboard](public/dash.png)
 
 ### 📚 Book Management  
-Interface for adding, editing, searching, and managing books with real-time stock tracking.  
+**Interface for adding, editing, searching, and managing books with real-time stock tracking.**
 ![Book Management](public/book.png)
 
 ### 👥 Member Management  
-Module to register, update, and monitor library members.  
+**Module to register, update, and monitor library members.**
 ![Member Management](public/member.png)
 
 ### 🔄 Transaction Management  
-Section for issuing and returning books with automatic updates to stock and member debt.  
+**Section for issuing and returning books with automatic updates to stock and member debt.** 
 ![Transaction Management](public/transaction.png)
+
+
+## 🎥 Project Demonstration
+Watch the complete walkthrough of the **Library Management System** in action — showcasing key features such as book management, member registration, transactions, and API-based book imports.
+
+### 📽️ **Project Video:**  
+
+(https://img.shields.io/badge/▶️%20Click%20to%20Watch-blue?style=for-the-badge)](https://your-video-link-here)
+
 
 
    
